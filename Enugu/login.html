@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wi-Fi Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <img src="img/logoE.png" alt="Enugu State Government">
+        </div>
+        <h1>Welcome</h1>
+        <p>Please log in to access the internet.</p>
+
+        <!-- Only ONE form -->
+        <form name="login" id="loginForm" method="post" action="$(link-login-only)" $(if chap-id) onsubmit="return doLogin()" $(endif)>
+            <input type="hidden" name="dst" value="https://judiciary.en.gov.ng/" />
+            <input type="hidden" name="popup" value="true" />
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password">
+            </div>
+            
+            <button type="submit">Log In</button>
+        </form>
+
+        <div id="error" class="error-message hidden"></div>
+        
+        <div class="footer">
+            <p>Powered by Enugu State Government</p>
+            <img src="img/logoE.png" width="30" height="30" alt="">
+        </div>
+    </div>
+
+    <!-- CHAP login support script -->
+    <script>
+        function doLogin() {
+            var password = document.getElementById('password').value;
+            var chapId = "$(chap-id)";
+            var chapChallenge = "$(chap-challenge)";
+            var hashed = hexMD5(chapId + password + chapChallenge);
+
+            // Create a hidden form to send hashed password
+            var form = document.getElementById('loginForm');
+            form.password.value = hashed;
+            return true;
+        }
+    </script>
+
+    <!-- MikroTik CHAP support requires MD5 -->
+    <script src="md5.js"></script> <!-- You must include MikroTik's md5.js -->
+</body>
+</html>
